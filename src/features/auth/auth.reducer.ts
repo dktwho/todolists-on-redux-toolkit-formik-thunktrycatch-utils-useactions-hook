@@ -14,9 +14,11 @@ const slice = createSlice({
     extraReducers: builder => {
         builder.addCase(login.fulfilled, (state, action) => {
             state.isLoggedIn = action.payload.isLoggedIn;
+            //state.isLoggedIn = true;
         })
         builder.addCase(logout.fulfilled, (state, action) => {
             state.isLoggedIn = action.payload.isLoggedIn;
+            //state.isLoggedIn = false
         })
         builder.addCase(initializeApp.fulfilled, (state, action) => {
             state.isLoggedIn = action.payload.isLoggedIn;
@@ -75,7 +77,6 @@ export const initializeApp = createAppAsyncThunk<{
         if (res.data.resultCode === ResultCode.Success) {
             return {isLoggedIn: true}
         } else {
-            handleServerAppError(res.data, dispatch);
             return rejectWithValue(null)
         }
     } catch (error) {
