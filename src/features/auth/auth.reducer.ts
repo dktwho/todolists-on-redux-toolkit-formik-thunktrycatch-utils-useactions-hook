@@ -4,6 +4,7 @@ import {authAPI, LoginParamsType} from "features/auth/auth.api";
 import {clearTasksAndTodolists} from "common/actions";
 import {createAppAsyncThunk, handleServerAppError, handleServerNetworkError} from "common/utils";
 import {ResultCode} from "../../common/enums";
+import {thunkTryCatch} from "../../common/utils/thunk-try-catch";
 
 const slice = createSlice({
     name: "auth",
@@ -43,7 +44,7 @@ export const login = createAppAsyncThunk<{
             // ❗ Если у нас fieldsErrors нету значит отобразим ошибку глобально
             const isShowAppError = !res.data.fieldsErrors.length
             handleServerAppError(res.data, dispatch, isShowAppError);
-             // handleServerAppError(res.data, dispatch, false);
+            // handleServerAppError(res.data, dispatch, false);
             return rejectWithValue(res.data)
         }
     } catch (error) {
@@ -77,20 +78,18 @@ export const initializeApp = createAppAsyncThunk<{
     isLoggedIn: boolean
 }, undefined>(`${slice.name}/initialize`, async (_, thunkAPI) => {
     const {dispatch, rejectWithValue} = thunkAPI
-    try {
+    return thunkTryCatch(thunkAPI, async () => {
         const res = await authAPI.me()
         if (res.data.resultCode === ResultCode.Success) {
             return {isLoggedIn: true}
         } else {
             return rejectWithValue(null)
         }
-    } catch (error) {
-        handleServerNetworkError(error, dispatch);
-        return rejectWithValue(null)
-    } finally {
+    }).finally(() => {
         dispatch(appActions.setAppInitialized({isInitialized: true}));
-    }
+    })
 })
+
 
 export const authReducer = slice.reducer;
 export const authThunks = {login, logout, initializeApp}
