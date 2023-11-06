@@ -5,7 +5,7 @@ import {Navigate} from "react-router-dom";
 import {Button, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, Grid, TextField} from "@mui/material";
 import {useAppDispatch} from "common/hooks";
 import {selectIsLoggedIn} from "features/auth/auth.selectors";
-import { authThunks } from "./auth.reducer";
+import {authThunks} from "./auth.reducer";
 
 export const Login = () => {
     const dispatch = useAppDispatch();
@@ -31,7 +31,15 @@ export const Login = () => {
             rememberMe: false,
         },
         onSubmit: (values) => {
-            dispatch(authThunks.login(values));
+            dispatch(authThunks.login(values))
+                .unwrap()
+                .then((res) => {
+
+                }).catch((error => {
+
+            }))
+
+
         },
     });
 
