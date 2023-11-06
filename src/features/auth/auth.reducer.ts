@@ -4,7 +4,6 @@ import {authAPI, LoginParamsType} from "features/auth/auth.api";
 import {clearTasksAndTodolists} from "common/actions";
 import {createAppAsyncThunk, handleServerAppError, handleServerNetworkError} from "common/utils";
 import {ResultCode} from "../../common/enums";
-import {BaseResponseType} from "../../common/types/common.types";
 
 const slice = createSlice({
     name: "auth",
