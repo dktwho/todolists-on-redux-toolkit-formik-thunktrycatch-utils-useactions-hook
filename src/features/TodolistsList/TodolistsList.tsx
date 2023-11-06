@@ -21,6 +21,7 @@ export const TodolistsList = () => {
     const dispatch = useAppDispatch();
     const {fetchTodolists, removeTodolist, addTodolist, changeTodolistTitle} = useActions(todolistsThunks)
     const {removeTask, addTask, updateTask} = useActions(tasksThunks)
+    const {changeTodolistFilter} = useActions(todolistsActions)
 
     useEffect(() => {
         if (!isLoggedIn) {
@@ -50,8 +51,9 @@ export const TodolistsList = () => {
      updateTask({taskId, domainModel: {title}, todolistId})
     }, []);
 
-    const changeFilter = useCallback(function (filter: FilterValuesType, id: string) {
-         dispatch(todolistsActions.changeTodolistFilter({id, filter}));
+    const changeFilterCB = useCallback(function (filter: FilterValuesType, id: string) {
+         // dispatch(todolistsActions.changeTodolistFilter({id, filter}));
+         changeTodolistFilter({id, filter})
     }, []);
 
     const removeTodolistCB = useCallback(function (id: string) {
@@ -92,7 +94,7 @@ export const TodolistsList = () => {
                                     todolist={tl}
                                     tasks={allTodolistTasks}
                                     removeTask={removeTaskCB}
-                                    changeFilter={changeFilter}
+                                    changeFilter={changeFilterCB}
                                     addTask={addTaskCB}
                                     changeTaskStatus={changeStatusCB}
                                     removeTodolist={removeTodolistCB}
