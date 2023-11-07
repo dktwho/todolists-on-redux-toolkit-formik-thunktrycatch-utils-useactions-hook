@@ -57,22 +57,18 @@ const logout = createAppAsyncThunk<{
     isLoggedIn: boolean
 }, undefined>(`${slice.name}/logout`, async (_, thunkAPI) => {
     const {dispatch, rejectWithValue} = thunkAPI
-    try {
-        dispatch(appActions.setAppStatus({status: "loading"}));
+    return thunkTryCatch(thunkAPI, async () => {
         const res = await authAPI.logout()
         if (res.data.resultCode === ResultCode.Success) {
             dispatch(clearTasksAndTodolists());
-            dispatch(appActions.setAppStatus({status: "succeeded"}));
             return {isLoggedIn: false}
         } else {
             handleServerAppError(res.data, dispatch);
             return rejectWithValue(null)
         }
-    } catch (error) {
-        handleServerNetworkError(error, dispatch);
-        return rejectWithValue(null)
-    }
+    })
 })
+
 
 export const initializeApp = createAppAsyncThunk<{
     isLoggedIn: boolean
