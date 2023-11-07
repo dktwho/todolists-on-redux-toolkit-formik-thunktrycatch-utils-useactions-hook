@@ -38,15 +38,14 @@ const addTask = createAppAsyncThunk<{ task: TaskType }, AddTaskArgType>("tasks/a
             return rejectWithValue(null);
         }
     })
-
 });
+
 
 const updateTask = createAppAsyncThunk<UpdateTaskArgType, UpdateTaskArgType>(
     "tasks/updateTask",
     async (arg, thunkAPI) => {
         const {dispatch, rejectWithValue, getState} = thunkAPI;
-        try {
-            dispatch(appActions.setAppStatus({status: "loading"}));
+        return thunkTryCatch(thunkAPI, async () => {
             const state = getState();
             const task = state.tasks[arg.todolistId].find((t) => t.id === arg.taskId);
             if (!task) {
@@ -72,13 +71,9 @@ const updateTask = createAppAsyncThunk<UpdateTaskArgType, UpdateTaskArgType>(
                 handleServerAppError(res.data, dispatch);
                 return rejectWithValue(null);
             }
-        } catch (e) {
-            handleServerNetworkError(e, dispatch);
-            return rejectWithValue(null);
-        }
+        })
     },
 );
-
 
 
 const removeTask = createAppAsyncThunk<RemoveTaskArgType, RemoveTaskArgType>(
