@@ -6,7 +6,7 @@ import {ResultCode} from "common/enums";
 import {clearTasksAndTodolists} from "common/actions";
 import {thunkTryCatch} from "../../common/utils/thunk-try-catch";
 
-const fetchTodolists = createAppAsyncThunk<{ todolists: TodolistType[] }, void>(
+const _fetchTodolists = createAppAsyncThunk<{ todolists: TodolistType[] }, void>(
     "todo/fetchTodolists",
     async (_, thunkAPI) => {
         const {dispatch, rejectWithValue} = thunkAPI;
@@ -19,6 +19,17 @@ const fetchTodolists = createAppAsyncThunk<{ todolists: TodolistType[] }, void>(
             handleServerNetworkError(e, dispatch);
             return rejectWithValue(null);
         }
+    },
+);
+
+const fetchTodolists = createAppAsyncThunk<{ todolists: TodolistType[] }, void>(
+    "todo/fetchTodolists",
+    async (_, thunkAPI) => {
+        const {dispatch, rejectWithValue} = thunkAPI;
+        return thunkTryCatch(thunkAPI, async () => {
+            const res = await todolistsApi.getTodolists();
+            return {todolists: res.data};
+        })
     },
 );
 
