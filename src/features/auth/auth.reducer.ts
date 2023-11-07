@@ -28,29 +28,25 @@ const slice = createSlice({
 });
 
 // thunks
+
 export const login = createAppAsyncThunk<{
     isLoggedIn: boolean
 }, LoginParamsType>(`${slice.name}/login`, async (arg, thunkAPI) => {
     const {dispatch, rejectWithValue} = thunkAPI
-    try {
-        dispatch(appActions.setAppStatus({status: "loading"}));
+    return thunkTryCatch(thunkAPI, async () => {
         const res = await authAPI.login(arg)
         if (res.data.resultCode === ResultCode.Success) {
-            dispatch(appActions.setAppStatus({status: "succeeded"}));
             return {isLoggedIn: true}
         } else {
             // ❗ Если у нас fieldsErrors есть значит мы будем отображать эти ошибки
             // в конкретном поле в компоненте (пункт 7)
-            // ❗ Если у нас fieldsErrors нету значит отобразим ошибку глобально
+            // ❗ Если у нас fieldsErrors нет значит отобразим ошибку глобально
             const isShowAppError = !res.data.fieldsErrors.length
             handleServerAppError(res.data, dispatch, isShowAppError);
             // handleServerAppError(res.data, dispatch, false);
             return rejectWithValue(res.data)
         }
-    } catch (error) {
-        handleServerNetworkError(error, dispatch);
-        return rejectWithValue(null)
-    }
+    })
 })
 
 const logout = createAppAsyncThunk<{
