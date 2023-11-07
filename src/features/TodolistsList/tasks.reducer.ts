@@ -9,7 +9,7 @@ import {
     UpdateTaskArgType,
     UpdateTaskModelType,
 } from "features/TodolistsList/todolists.api";
-import {createAppAsyncThunk, handleServerAppError, handleServerNetworkError} from "common/utils";
+import {createAppAsyncThunk, handleServerAppError} from "common/utils";
 import {ResultCode, TaskPriorities, TaskStatuses} from "common/enums";
 import {clearTasksAndTodolists} from "common/actions";
 import {thunkTryCatch} from "../../common/utils/thunk-try-catch";
